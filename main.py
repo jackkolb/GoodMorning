@@ -177,12 +177,12 @@ def get_greeting(environment):
 def main():
     root = tk.Tk()
     root.title('Good Morning')
-    root.geometry('800x600')
-    root.bind("<Escape>", lambda event: root.destroy())
+#    root.geometry('800x600')
+    root.bind("e", lambda event: root.destroy())
 
     root.grid()
 
-    root.overrideredirect(True)
+#    root.overrideredirect(True)
     root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 
     width = root.winfo_screenwidth()
