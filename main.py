@@ -11,7 +11,7 @@ settings = {}
 
 
 def get_settings():
-    with open('settings.cfg', 'r') as settings_file:
+    with open('jack_settings.cfg', 'r') as settings_file:
         lines = settings_file.readlines()
 
         for line in lines:
@@ -139,12 +139,12 @@ def main():
 
     background_image = background.create_image(width, height, image=morning_background_image, anchor=tk.SE)
 
-    greeting_text = background.create_text(width*.5, height*.4,
+    greeting_text = background.create_text(width*.5, height*.3,
                            font="AvantGarde 40 normal",
                            text=get_greeting("morning"),
                            fill="white")
 
-    date_text = background.create_text(width*.5, height*.5,
+    date_text = background.create_text(width*.5, height*.4,
                            font="AvantGarde 20 normal",
                            text=get_date(),
                            fill="white")
@@ -213,8 +213,6 @@ def main():
                 morning_background_image = ImageTk.PhotoImage(morning_background)
                 background.itemconfig(background_image, image=morning_background_image)
                 background.itemconfig(greeting_text, text=get_greeting(environment_flag))
-
-            print("Update!")
 
     update = threading.Thread(target=update_thread)
     update.start()
