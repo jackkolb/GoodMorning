@@ -239,7 +239,7 @@ def main():
         date_flag = 0
         weather_flag = 0
         time_flag = 0
-        environment_flag = "morning"
+        environment_flag = ""
         stock_flag = 0
 
         while True:
