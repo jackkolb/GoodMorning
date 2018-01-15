@@ -15,6 +15,8 @@ def get_settings():
         lines = settings_file.readlines()
 
         for line in lines:
+            if line == '\n':
+                continue
             variable = line[:line.find('=')]
             value = line[line.find('=')+1:-1]
 
@@ -61,11 +63,68 @@ def convert_kelvin_to_celsius(kelvin):
     return int((kelvin - 273))
 
 
+def get_stocks():
+    ticker_line = []
+
+    if settings['stock_api_key'] == "ALPHAVANTAGE_API_KEY_GOES_HERE":
+        return "read the ReadMe!"
+    try:
+        stocks = settings['stocks'].split(',')
+        cryptos = settings['cryptos'].split(',')
+
+        for stock in stocks:
+            url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + stock + "&interval=60min&outputsize=compact&apikey=" + settings['stock_api_key']
+            title = "Time Series (60min)"
+            header = "4. close"
+            interval = 23
+
+            http_data = urllib.request.urlopen(url)
+            json_data = json.loads(http_data.read().decode())
+            times = list(json_data[title].keys())
+            times.sort()
+            current_price = float(json_data[title][times[0]][header])
+            previous_price = float(json_data[title][times[interval]][header])
+            gain = current_price - previous_price
+            percent = gain / previous_price
+            gain = round(gain, 2)
+            if gain > 0:
+                gain = "+" + str(gain)
+            ticker_line.append(stock + ": " + "$" + str(round(current_price, 2)) + " " + str(gain) + " (" + str(round(percent, 2)) + "%)")
+
+        for crypto in cryptos:
+            url = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=" + crypto + "&market=USD&apikey=" + settings['stock_api_key']
+            title = "Time Series (Digital Currency Intraday)"
+            header = "1a. price (USD)"
+            interval = 288
+
+            http_data = urllib.request.urlopen(url)
+            json_data = json.loads(http_data.read().decode())
+            times = list(json_data[title].keys())
+            times.sort()
+            current_price = float(json_data[title][times[0]][header])
+            previous_price = float(json_data[title][times[interval]][header])
+            gain = current_price - previous_price
+            percent = gain/previous_price
+            gain = round(gain, 2)
+            if gain > 0:
+                gain = "+" + str(gain)
+            ticker_line.append(crypto + ": " + "$" + str(round(current_price, 2)) + " " + str(gain) + " (" + str(round(percent, 2)) + "%)")
+
+    except KeyboardInterrupt as e:
+        ticker_line.append("Stocks Unavailable")
+
+    stock_line = ""
+    for line in ticker_line:
+        stock_line += line + "  "
+
+    return stock_line
+
+
 def get_weather():
     if settings['weather_api_key'] == "OPENWEATHERMAP_API_KEY_GOES_HERE":
         return "read the ReadMe!"
     try:
-        http_data = urllib.request.urlopen("http://api.openweathermap.org/data/2.5/weather?zip=92507,us&appid=" + settings['weather_api_key'])
+        http_data = urllib.request.urlopen("http://api.openweathermap.org/data/2.5/weather?zip=" + settings['zip_code'] + ",us&appid=" + settings['weather_api_key'])
         json_data = json.loads(http_data.read().decode())
         weather_data = json_data['main']
 
@@ -141,37 +200,49 @@ def main():
 
     greeting_text = background.create_text(width*.5, height*.3,
                            font="AvantGarde 40 normal",
-                           text=get_greeting("morning"),
+                           text="",
                            fill="white")
 
     date_text = background.create_text(width*.5, height*.4,
                            font="AvantGarde 20 normal",
-                           text=get_date(),
+                           text="",
                            fill="white")
 
     weather_text = background.create_text(width*.2, height*.70,
                            font="AvantGarde 20 normal",
-                           text=get_weather(),
+                           text="",
                            fill="white",
                            justify="left")
 
     time_text = background.create_text(width*.5, height*.07,
                            font="AvantGarde 20 normal",
-                           text=get_time(),
+                           text="",
                            fill="white",
                            justify="left")
 
+    stock_scroll = background.create_text(width * .5, height * .98,
+                                          font="Courier 15 bold",
+                                          text="  ",
+                                          fill="white")
 
+    class ticker_bar:
+        delay = 250  # milliseconds of delay per character
+        stock_text = "Loading Stocks..."
 
+    def shif():
+        ticker_bar.stock_text = ticker_bar.stock_text[1:] + ticker_bar.stock_text[0]
+        background.itemconfig(stock_scroll, text=ticker_bar.stock_text)
+        root.after(ticker_bar.delay, shif)
+    shif()
 
     def update_thread():
         date_flag = 0
         weather_flag = 0
         time_flag = 0
         environment_flag = "morning"
+        stock_flag = 0
 
         while True:
-            time.sleep(3)
             now = datetime.datetime.now(pytz.timezone(settings['timezone']))
 
             if now.day != date_flag:
@@ -214,8 +285,15 @@ def main():
                 background.itemconfig(background_image, image=morning_background_image)
                 background.itemconfig(greeting_text, text=get_greeting(environment_flag))
 
+            if now.hour != stock_flag:
+                ticker_bar.stock_text = get_stocks()
+                stock_flag = now.hour
+
+            time.sleep(3)
+
     update = threading.Thread(target=update_thread)
     update.start()
+
 
     root.mainloop()
 
