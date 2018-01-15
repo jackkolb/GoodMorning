@@ -183,10 +183,10 @@ def main():
     root.grid()
 
 #    root.overrideredirect(True)
-#    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+    root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
 
-    width = 800
-    height = 600
+    width = root.winfo_screenwidth()
+    height = root.winfo_screenheight()
 
     get_settings()
 
