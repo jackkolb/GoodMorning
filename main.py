@@ -198,6 +198,8 @@ def main():
 
     background_image = background.create_image(width, height, image=morning_background_image, anchor=tk.SE)
 
+    foreground_image = background.create_image(width, height, anchor=tk.SE)
+
     greeting_text = background.create_text(width*.5, height*.3,
                            font="AvantGarde 40 normal",
                            text="",
@@ -236,11 +238,11 @@ def main():
     shif()
 
     def update_thread():
-        date_flag = 0
-        weather_flag = 0
-        time_flag = 0
+        date_flag = -1
+        weather_flag = -1
+        time_flag = -1
         environment_flag = ""
-        stock_flag = 0
+        stock_flag = -1
 
         while True:
             now = datetime.datetime.now(pytz.timezone(settings['timezone']))
@@ -250,14 +252,37 @@ def main():
                 date_flag = now.day
 
             if now.hour != weather_flag:
-                background.itemconfig(weather_text, text=get_weather())
+                weather = get_weather()
+                background.itemconfig(weather_text, text=weather)
+                weather = weather.split('\n')[-1]
+                if "clear" in weather.lower():
+                    weather_image = "img/clear_skies.png"
+                elif "overcast" in weather.lower():
+                    weather_image = "img/heavy_clouds.png"
+                elif "clouds" in weather.lower():
+                    weather_image = "img/light_clouds.png"
+                elif "mist" in weather.lower():
+                    weather_image = "img/heavy_clouds.png"
+                elif "snow" in weather.lower():
+                    weather_image = "img/storm_clouds.png"
+                elif "rain" in weather.lower():
+                    weather_image = "img/storm_clouds.png"
+                elif "drizzle" in weather.lower():
+                    weather_image = "img/storm_clouds.png"
+                elif "fog" in weather.lower():
+                    weather_image = "img/fog_clouds.png"
+                else:
+                    weather_image = "img/light_clouds.png"
+                light_clouds = Image.open(weather_image).copy().resize((width, height))
+                light_clouds_image = ImageTk.PhotoImage(light_clouds)
+                background.itemconfig(foreground_image, image=light_clouds_image)
                 weather_flag = now.hour
 
             if now.minute != time_flag:
                 background.itemconfig(time_text, text=get_time())
                 time_flag = now.minute
 
-            if now.hour >= 6 and now.hour < 12 and environment_flag != "morning":
+            if 12 > now.hour >= 6 and environment_flag != "morning":
                 environment_flag = "morning"
                 morning_background = Image.open("img/morning_background.png").copy().resize((width, height))
                 morning_background_image = ImageTk.PhotoImage(morning_background)
