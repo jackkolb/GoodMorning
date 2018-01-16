@@ -73,7 +73,8 @@ def get_stocks():
         cryptos = settings['cryptos'].split(',')
 
         for stock in stocks:
-            url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + stock + "&interval=60min&outputsize=compact&apikey=" + settings['stock_api_key']
+            url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + stock\
+                  + "&interval=60min&outputsize=compact&apikey=" + settings['stock_api_key']
             title = "Time Series (60min)"
             header = "4. close"
             interval = 23
@@ -85,14 +86,16 @@ def get_stocks():
             current_price = float(json_data[title][times[0]][header])
             previous_price = float(json_data[title][times[interval]][header])
             gain = current_price - previous_price
-            percent = gain / previous_price
+            percent = 100 * gain / previous_price
             gain = round(gain, 2)
             if gain > 0:
                 gain = "+" + str(gain)
-            ticker_line.append(stock + ": " + "$" + str(round(current_price, 2)) + " " + str(gain) + " (" + str(round(percent, 2)) + "%)")
+            ticker_line.append(stock + ": " + "$" + str(round(current_price, 2)) + " " + str(gain)
+                               + " (" + str(round(percent, 2)) + "%)")
 
         for crypto in cryptos:
-            url = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=" + crypto + "&market=USD&apikey=" + settings['stock_api_key']
+            url = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=" + crypto\
+                  + "&market=USD&apikey=" + settings['stock_api_key']
             title = "Time Series (Digital Currency Intraday)"
             header = "1a. price (USD)"
             interval = 288
@@ -108,7 +111,8 @@ def get_stocks():
             gain = round(gain, 2)
             if gain > 0:
                 gain = "+" + str(gain)
-            ticker_line.append(crypto + ": " + "$" + str(round(current_price, 2)) + " " + str(gain) + " (" + str(round(percent, 2)) + "%)")
+            ticker_line.append(crypto + ": " + "$" + str(round(current_price, 2)) + " " + str(gain)
+                               + " (" + str(round(percent, 2)) + "%)")
 
     except KeyboardInterrupt as e:
         ticker_line.append("Stocks Unavailable")
@@ -124,7 +128,8 @@ def get_weather():
     if settings['weather_api_key'] == "OPENWEATHERMAP_API_KEY_GOES_HERE":
         return "read the ReadMe!"
     try:
-        http_data = urllib.request.urlopen("http://api.openweathermap.org/data/2.5/weather?zip=" + settings['zip_code'] + ",us&appid=" + settings['weather_api_key'])
+        http_data = urllib.request.urlopen("http://api.openweathermap.org/data/2.5/weather?zip=" + settings['zip_code']
+                                           + ",us&appid=" + settings['weather_api_key'])
         json_data = json.loads(http_data.read().decode())
         weather_data = json_data['main']
 
@@ -190,51 +195,50 @@ def main():
 
     get_settings()
 
-    morning_background = Image.open("img/morning_background.png").copy().resize((width, height))
-    morning_background_image = ImageTk.PhotoImage(morning_background)
+    initial_background = Image.open("img/morning_background.png").copy().resize((width, height))
+    initial_background_image = ImageTk.PhotoImage(initial_background)
 
     background = tk.Canvas(width=width, height=height, bg='black', highlightthickness=0, relief='ridge')
     background.grid(row=0, column=0, rowspan=20, columnspan=20)
 
-    background_image = background.create_image(width, height, image=morning_background_image, anchor=tk.SE)
+    background_image = background.create_image(width, height, image=initial_background_image, anchor=tk.SE)
 
     foreground_image = background.create_image(width, height, anchor=tk.SE)
 
     greeting_text = background.create_text(width*.5, height*.3,
-                           font="AvantGarde 40 normal",
-                           text="",
-                           fill="white")
+                                           font="AvantGarde " + str(int(height*.08)) + " normal",
+                                           text="",
+                                           fill="white")
 
     date_text = background.create_text(width*.5, height*.4,
-                           font="AvantGarde 20 normal",
-                           text="",
-                           fill="white")
+                                       font="AvantGarde " + str(int(height*.03)) + " normal",
+                                       text="",
+                                       fill="white")
 
-    weather_text = background.create_text(width*.2, height*.70,
-                           font="AvantGarde 20 normal",
-                           text="",
-                           fill="white",
-                           justify="left")
+    weather_text = background.create_text(width*.2, height*.67,
+                                          font="AvantGarde " + str(int(height*.03)) + " normal",
+                                          text="",
+                                          fill="white",
+                                          anchor="ne")
 
     time_text = background.create_text(width*.5, height*.07,
-                           font="AvantGarde 20 normal",
-                           text="",
-                           fill="white",
-                           justify="left")
+                                       font="AvantGarde " + str(int(height*.03)) + " normal",
+                                       text="",
+                                       fill="white")
 
-    stock_scroll = background.create_text(width * .5, height * .98,
-                                          font="Courier 15 bold",
+    stock_scroll = background.create_text(width * .5, height * .95,
+                                          font="Courier " + str(int(height*.03)) + " bold",
                                           text="  ",
                                           fill="white")
 
-    class ticker_bar:
+    class TickerBar:
         delay = 250  # milliseconds of delay per character
         stock_text = "Loading Stocks..."
 
     def shif():
-        ticker_bar.stock_text = ticker_bar.stock_text[1:] + ticker_bar.stock_text[0]
-        background.itemconfig(stock_scroll, text=ticker_bar.stock_text)
-        root.after(ticker_bar.delay, shif)
+        TickerBar.stock_text = TickerBar.stock_text[1:] + TickerBar.stock_text[0]
+        background.itemconfig(stock_scroll, text=TickerBar.stock_text)
+        root.after(TickerBar.delay, shif)
     shif()
 
     def update_thread():
@@ -273,9 +277,9 @@ def main():
                     weather_image = "img/fog_clouds.png"
                 else:
                     weather_image = "img/light_clouds.png"
-                light_clouds = Image.open(weather_image).copy().resize((width, height))
-                light_clouds_image = ImageTk.PhotoImage(light_clouds)
-                background.itemconfig(foreground_image, image=light_clouds_image)
+                weather_foreground = Image.open(weather_image).copy().resize((width, height))
+                weather_foreground_image = ImageTk.PhotoImage(weather_foreground)
+                background.itemconfig(foreground_image, image=weather_foreground_image)
                 weather_flag = now.hour
 
             if now.minute != time_flag:
@@ -289,14 +293,14 @@ def main():
                 background.itemconfig(background_image, image=morning_background_image)
                 background.itemconfig(greeting_text, text=get_greeting(environment_flag))
 
-            if now.hour >= 12 and now.hour < 17 and environment_flag != "afternoon":
+            if 17 > now.hour >= 12 and environment_flag != "afternoon":
                 environment_flag = "afternoon"
                 morning_background = Image.open("img/morning_background.png").copy().resize((width, height))
                 morning_background_image = ImageTk.PhotoImage(morning_background)
                 background.itemconfig(background_image, image=morning_background_image)
                 background.itemconfig(greeting_text, text=get_greeting(environment_flag))
 
-            if now.hour >= 17 and now.hour < 20 and environment_flag != "evening":
+            if 20 > now.hour >= 17 and environment_flag != "evening":
                 environment_flag = "evening"
                 morning_background = Image.open("img/evening_background.png").copy().resize((width, height))
                 morning_background_image = ImageTk.PhotoImage(morning_background)
@@ -311,14 +315,13 @@ def main():
                 background.itemconfig(greeting_text, text=get_greeting(environment_flag))
 
             if now.hour != stock_flag:
-                ticker_bar.stock_text = get_stocks()
+                TickerBar.stock_text = get_stocks()
                 stock_flag = now.hour
 
             time.sleep(3)
 
     update = threading.Thread(target=update_thread)
     update.start()
-
 
     root.mainloop()
 
