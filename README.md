@@ -71,4 +71,4 @@ My development settings (with my API keys), as I use GitHub to get the code onto
 my Raspberry Pi, and don't feel like retyping the keys when I change the settings file!
 It should not get in the way
 
-Enjoy! If you make any significant improvements, let me know so we can add them to the main branch!
+***Enjoy! If you make any significant improvements, let me know so we can add them to the main branch!***
