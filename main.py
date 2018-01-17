@@ -1,18 +1,16 @@
 # GoodMorning -- (C) Jack Kolb, 2018
 
 # External Libraries
-from PIL import Image, ImageTk
-import pytz
+from PIL import Image, ImageTk  # used for image processing/resizing
+import pytz  # used to convert the time to the local timezone
 
 # Internal Libraries
-import tkinter as tk
-import datetime
-import time
-import threading
-import urllib.request
-import json
-import os.path
-import sys
+import tkinter as tk  # used for the window display
+import datetime  # used to get the current time
+import time  # used to "sleep" in the update loop
+import threading  # used to run the update loop in the background
+import urllib.request  # used to get stock/weather data from their APIs
+import json  # used to process stock/weather data
 
 
 settings = {}  # settings dictionary used in various functions
@@ -21,8 +19,6 @@ settings = {}  # settings dictionary used in various functions
 # retrieves settings from the settings file
 def get_settings():
     settings_file_path = 'settings.cfg'  # the default file path
-    if os.path.exists('jack_settings.cfg'):  # changes the path if it finds my dev settings file (not on GitHub)
-        settings_file_path = 'jack_settings.cfg'
 
     # reads the settings file into the settings dictionary, everything before'=' is variable, after '=' is value
     with open(settings_file_path, 'r') as settings_file:
