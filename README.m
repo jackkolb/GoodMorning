@@ -28,6 +28,7 @@ Notes:
 - The backgrounds scale to the window size, so you can change them as per your preference
 - To exit the display, press "e"
 - The code is pretty straightforward, so feel free to modify it :)
+- There are screenshots in the screenshots folder!
 
 
 Settings:
