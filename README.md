@@ -1,4 +1,4 @@
-#GoodMorning
+# GoodMorning
 
 
 GoodMorning is a nice display of the time, date, weather, and stock data,
@@ -10,28 +10,30 @@ mounted to a small display on my mirror!
 Made in Python 3.6
 
 
-Package Requirements:
+***Package Requirements:***
 - pytz
 - PIL
 - tkinter
 
 
-Install Guide:
+***Install Guide:***
 1. clone the repository or unzip the files somewhere
 2. edit the settings.cfg file to your preferred name/timezome/stocks/etc
 3. for weather data I use openweathermap's API -- make a free account for the API key
 4. for stock data I use alphavantage's API -- make a free account for the API key
 5. run the main.py file to run the display
 
+To just get a feel for what GoodMorning is, simply run the main.py file.
 
-Notes:
+
+***Notes:***
 - The backgrounds scale to the window size, so they are not restricted to specific dimensions
 - To exit the display, press "e"
 - The code is pretty straightforward, so feel free to modify it :)
 - There are screenshots in the screenshots folder!
 
 
-Settings:
+***Settings:***
 - name: the display name ("Good Morning _____")
 - timezone: your timezone as per pytz's formats ("US/Eastern", "US/Western", etc)
 - temperature: "F" - Fahrenheit, "R" - Rankine, "C" - Celsius, "K" - Kelvin
@@ -43,7 +45,7 @@ Settings:
 - cryptos: the cryptocurrencies you want listed on the ticker feed, in the example format: "cryptos=BTC,ETH,USDT"
 
 
-Troubleshooting:
+***Troubleshooting:***
 
 "My Raspberry Pi says 'cannot import name ImageTk'!"
 sudo apt-get install python3-pil.imagetk
