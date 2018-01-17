@@ -1,4 +1,4 @@
-GoodMorning ReadMe:
+# GoodMorning
 
 
 GoodMorning is a nice display of the time, date, weather, and stock data,
