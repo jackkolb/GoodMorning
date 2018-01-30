@@ -72,8 +72,8 @@ The program splits the tickers by commas, no spaces (Ex: AAPL,GOOG,TSLA,MSFT,AMZ
 
 "What is jack_settings.cfg?"
 
-My development settings (with my API keys), as I use GitHub to get the code onto
+My personal settings (with my API keys), as I use GitHub to get the code onto
 my Raspberry Pi, and don't feel like retyping the keys when I change the settings file!
-It should not get in the way
+It should not get in the way, remove mention of it if you'd like.
 
 ***Enjoy! If you make any significant improvements, let me know so we can add them to the main branch!***
