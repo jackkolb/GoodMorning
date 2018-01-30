@@ -48,9 +48,11 @@ To just get a feel for what GoodMorning is, simply run the main.py file.
 ***Troubleshooting:***
 
 "My Raspberry Pi says 'cannot import name ImageTk'!"
+
 sudo apt-get install python3-pil.imagetk
 
 "Weather and/or stock data is unavailable"
+
 Several possible sources:
 - you haven't yet setup the api key in the settings.cfg file (assume this first)
 - you aren't connected to the internet (assume this second)
@@ -61,12 +63,15 @@ If you've checked your internet, the API site, your key, and the package is
 at the latest version, leave an issue! Be as descriptive as possible.
 
 "It says 'Good Afternoon Jack!', how can I make it my own name?"
+
 Change the name in settings.cfg
 
 "How do I manage the stock/crypto data displayed?"
+
 The program splits the tickers by commas, no spaces (Ex: AAPL,GOOG,TSLA,MSFT,AMZN)
 
 "What is jack_settings.cfg?"
+
 My development settings (with my API keys), as I use GitHub to get the code onto
 my Raspberry Pi, and don't feel like retyping the keys when I change the settings file!
 It should not get in the way
